@@ -100,6 +100,24 @@ Try these in order:
 
 The launcher does not delete data when it fails. Recent service logs are shown when startup cannot complete.
 
+## Local service map
+
+FastAPI serves the React client and its API. PostgreSQL holds application and job
+state; the worker handles imports and exports. The web service and worker share the
+upload and report volumes.
+
+```mermaid
+flowchart LR
+  browser[Browser: React SPA] <--> web[FastAPI web]
+  web <--> db[(PostgreSQL)]
+  db <--> worker[Import and export worker]
+  web <--> files[Shared upload and report volumes]
+  worker <--> files
+```
+
+See [architecture](docs/architecture.md), [Compose services](compose.yaml),
+[API startup](backend/vulnbatch/main.py), and [worker](backend/vulnbatch/worker.py).
+
 ## Technical startup
 
 People who prefer a terminal can run:
